@@ -27,6 +27,22 @@ export function dongHead(vb, slot, name) {
   return vpick(vb, "h:" + slot, pools[slot]);
 }
 
+// 구·시(branch) 페이지 H2 제목 변형 — region-tree(전국)·locations(서울) 공용.
+export function branchHead(vb, slot, name) {
+  const pools = {
+    feature: [`${name} 지역 특징`, `${name}은(는) 어떤 지역인가요`, `${name} 지역 살펴보기`, `한눈에 보는 ${name}`],
+    life: [`${name} 주요 생활권과 이동`, `${name} 생활권과 이동 동선`, `${name} 권역과 이동 살펴보기`, `${name} 주요 권역 안내`],
+    demand: [`${name}에서 출장마사지·홈타이 이용이 많은 경우`, `이런 경우 ${name}에서 많이 찾습니다`, `${name}에서 방문 관리를 찾는 상황`, `${name} 출장마사지·홈타이가 필요할 때`],
+    cmp2: [`${name}에서 방문(홈타이)과 매장 이용 비교`, `${name} 홈타이와 매장, 무엇이 다를까`, `${name} 방문형과 매장형 차이`, `${name}에서 홈타이·매장 중 고르기`],
+    overview: [`${name} 출장마사지 한눈에 보기`, `${name} 이용 안내 한눈에`, `${name} 출장마사지·홈타이 요약`, `${name} 핵심 안내 정리`],
+    compare: [`${name}에서 비교해 볼 관리 방식`, `${name}에서 고를 수 있는 관리 방식`, `${name}에서 어떤 관리를 받을까`, `${name} 인근 프로그램 선택 기준`],
+    reserve: [`${name} 출장마사지 예약 안내`, `${name} 예약은 이렇게`, `${name}에서 예약하는 방법`, `${name} 방문 예약 안내`],
+    check: [`예약 전 체크리스트`, `${name} 예약 전 확인할 점`, `예약 전 짚어 둘 점`, `${name} 방문 전 체크 포인트`],
+    faq: [`자주 묻는 질문`, `${name} 자주 묻는 질문`, `예약 전 자주 묻는 질문`],
+  };
+  return vpick(vb, "bh:" + slot, pools[slot]);
+}
+
 function seed(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
@@ -401,21 +417,31 @@ function branchPage(node) {
         <div class="section-head"><span class="eyebrow">${esc(node.name)} ${esc(
         childLabel
       )}</span>
-          <h2>${esc(childLabel)}를 선택하세요</h2>
+          <h2>${esc(vpick(vb, "hChildSel", [
+        `${childLabel}를 선택하세요`,
+        `어느 ${childLabel}인가요`,
+        `${childLabel}부터 골라 보세요`,
+        `${node.name} ${childLabel} 선택`,
+      ]))}</h2>
           <p>${esc(
             childLabel
           )}를 고른 뒤 하위 지역까지 좁혀 가면, 해당 지역의 출장마사지·홈타이 이용 안내를 확인할 수 있습니다.</p>
         </div>
         <div class="grid grid-4">${childCards}</div>
       </div></section>`
-    : `<h2>${esc(node.name)} ${esc(childLabel)}에서 찾기</h2>
+    : `<h2>${esc(vpick(vb, "hChildFind", [
+        `${node.name} ${childLabel}에서 찾기`,
+        `${node.name} ${childLabel}로 좁혀 보기`,
+        `${node.name} ${childLabel} 목록`,
+        `${node.name} 안에서 ${childLabel} 고르기`,
+      ]))}</h2>
        <p>아래에서 ${esc(node.name)}의 ${esc(
         childLabel
       )}를 선택하면 해당 지역의 출장마사지·홈타이 이용 안내를 확인할 수 있습니다. (숫자 행정동은 대표 동명으로 통합해 안내합니다.)</p>
        <div class="link-cloud">${childLinks}</div>`;
 
   const secFeature = `
-    <h2>${esc(nm)} 지역 특징</h2>
+    <h2>${esc(branchHead(vb, "feature", nm))}</h2>
     ${charPara}
     <p>${esc(vpick(vb, "feat", [
       `같은 ‘${fullName} 출장마사지’라도 ${childLabel}에 따라 방문 권역과 도착 소요 시간이 달라질 수 있어, 원하는 지역을 먼저 고르면 방문 가능 여부와 프로그램을 더 정확히 확인할 수 있습니다.`,
@@ -424,7 +450,7 @@ function branchPage(node) {
     ]))}</p>`;
 
   const secWho = `
-    <h2>${esc(nm)}에서 출장마사지·홈타이 이용이 많은 경우</h2>
+    <h2>${esc(branchHead(vb, "demand", nm))}</h2>
     <ul>${vsubset(vb, "who", [
       `매장 방문 없이 집·숙소에서 편하게 관리받고 싶은 경우`,
       `${nm} 안에서 퇴근 후·늦은 시간에 이용하고 싶은 경우`,
@@ -435,7 +461,7 @@ function branchPage(node) {
     ], 4).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
 
   const secCompare = `
-    <h2>${esc(nm)}에서 방문(홈타이)과 매장 이용 비교</h2>
+    <h2>${esc(branchHead(vb, "cmp2", nm))}</h2>
     <p>${esc(vpick(vb, "compare", [
       `매장 이용이 시설과 부대 서비스를 함께 쓰는 방식이라면, 홈타이는 ${nm} 내 집·숙소로 관리사가 찾아오는 방문 방식입니다. 이동 부담이 적고 관리 후 바로 쉴 수 있는 대신, 관리 공간과 타월 등 준비물을 직접 챙겨야 하므로 예약 시 준비 사항을 확인하는 것이 좋습니다.`,
       `${nm}에서 매장 이용은 부대 시설을 함께 쓸 수 있고, 홈타이는 집·숙소로 받아 이동 없이 바로 쉴 수 있다는 점이 다릅니다. 목적과 시간대에 따라 맞는 방식을 고르면 됩니다.`,
@@ -443,7 +469,7 @@ function branchPage(node) {
     ]))}</p>`;
 
   const secGuide = `
-    <h2>${esc(nm)} 출장마사지 한눈에 보기</h2>
+    <h2>${esc(branchHead(vb, "overview", nm))}</h2>
     <p>${esc(vpick(vb, "guide", [
       `${nm}에서 출장마사지·홈타이를 이용할 때는 방문 권역(어느 지역까지 방문 가능한지), 프로그램(스웨디시·아로마·타이마사지·홈타이), 이용 시간(60·90·120분), 총 비용과 추가 요금을 순서대로 확인하면 선택이 쉬워집니다. 특히 ${childLabel}에 따라 도착 소요 시간이 달라질 수 있으니, 원하는 지역을 먼저 정해 두는 것이 좋습니다.`,
       `${nm} 이용은 ① 방문 권역 ② 프로그램 ③ 이용 시간(60·90·120분) ④ 비용·추가 요금 순으로 확인하면 정리가 쉽습니다. ${childLabel}마다 권역이 달라 원하는 지역을 먼저 정하는 것이 핵심입니다.`,
@@ -451,7 +477,7 @@ function branchPage(node) {
     ]))}</p>`;
 
   const secPrograms = `
-    <h2>${esc(nm)}에서 비교해 볼 관리 방식</h2>
+    <h2>${esc(branchHead(vb, "compare", nm))}</h2>
     <p>${esc(vpick(vb, "prog", [
       `부드러운 오일 관리를 원한다면 스웨디시·아로마테라피, 스트레칭 위주라면 타이마사지, 집·숙소에서 편하게 받고 싶다면 홈타이, 가벼운 부분 관리는 발마사지를 비교해 보세요.`,
       `${nm} 인근에서는 오일 기반의 스웨디시·아로마, 근육을 늘려 푸는 타이마사지, 방문형 홈타이, 부분 관리인 발마사지를 목적에 맞게 고르면 됩니다.`,
@@ -461,7 +487,7 @@ function branchPage(node) {
     ${callout()}`;
 
   const secBooking = `
-    <h2>${esc(nm)} 출장마사지 예약 안내</h2>
+    <h2>${esc(branchHead(vb, "reserve", nm))}</h2>
     <p>${esc(vpick(vb, "booking", [
       `${nm}에서 출장마사지나 홈타이를 예약할 때는 원하는 하위 지역, 프로그램, 시간을 함께 전달하면 방문 가능 여부와 도착 예정 시간을 안내받을 수 있습니다. 처음 이용한다면 지역 확인 → 프로그램 선택 → 시간·비용 확인 → 전화예약 순서로 진행하면 됩니다. 표시 가격에 방문비나 심야 추가 요금이 포함되는지, 관리사 성별 지정이 가능한지도 미리 확인해 두면 좋습니다.`,
       `${nm} 예약은 원하는 ${childLabel}와 프로그램·시간을 전화로 알리는 것에서 시작합니다. 방문 가능 여부와 도착 예정 시간, 총 비용을 함께 확인하고, 심야 추가 요금이나 관리사 성별 지정 가능 여부도 미리 물어 두면 좋습니다.`,
@@ -469,7 +495,7 @@ function branchPage(node) {
     ]))} 안내된 정보는 참고용이며 실제 이용 조건은 예약 과정에서 확정됩니다.</p>`;
 
   const secChecklist = `
-    <h2>예약 전 체크리스트</h2>
+    <h2>${esc(branchHead(vb, "check", nm))}</h2>
     <ul>${vsubset(vb, "check", [
       `방문 희망 지역과 방문 소요 시간`,
       `원하는 프로그램과 관리 시간`,
@@ -480,7 +506,7 @@ function branchPage(node) {
     ], 5).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
 
   const secFaq = `
-    <h2>자주 묻는 질문</h2>
+    <h2>${esc(branchHead(vb, "faq", nm))}</h2>
     <div class="faq">
       ${faqs
         .map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`)

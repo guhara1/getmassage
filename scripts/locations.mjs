@@ -6,7 +6,7 @@ import { site } from "../data/site.mjs";
 import { programBySlug } from "../data/programs.mjs";
 import { seoul } from "../data/seoul.mjs";
 import { slugify } from "./romanize.mjs";
-import { dongMeta, branchMeta, dongHead } from "./region-tree.mjs";
+import { dongMeta, branchMeta, dongHead, branchHead } from "./region-tree.mjs";
 import { vpick, vsubset, vshuffle } from "./variants.mjs";
 
 const MODIFIED = "2026-06-21";
@@ -288,7 +288,7 @@ function guPage(gu) {
   ];
 
   const secFeature = `
-    <h2>${esc(nm)} 지역 특징</h2>
+    <h2>${esc(branchHead(vb, "feature", nm))}</h2>
     <p>${esc(nm)}은(는) ${esc(gu.character)} ${esc(stationText)} 등으로 이동이 이어지고, ${esc(landmarkText)} 같은 시설이 생활 권역의 기준점이 됩니다.</p>
     <p>${esc(vpick(vb, "feat", [
       `같은 ‘서울 ${nm} 출장마사지’라도 행정동에 따라 방문 권역과 도착 소요 시간이 달라질 수 있어, 원하는 동네를 먼저 고르면 방문 가능 여부와 프로그램을 더 정확히 확인할 수 있습니다.`,
@@ -296,14 +296,14 @@ function guPage(gu) {
       `서울 ${nm}에서 출장마사지·홈타이를 찾을 때는 행정동별 권역 차이를 먼저 살펴보면 방문 가능 여부를 정확히 좁힐 수 있습니다.`,
     ]))}</p>`;
   const secLife = `
-    <h2>${esc(nm)} 주요 생활권과 이동</h2>
+    <h2>${esc(branchHead(vb, "life", nm))}</h2>
     <p>${esc(vpick(vb, "life", [
       `${nm}은(는) ${stationText} 등으로 이동이 이어지고, ${landmarkText} 같은 시설을 중심으로 생활 권역이 형성됩니다. 같은 구 안에서도 권역에 따라 분위기와 이동 동선이 달라, 방문 위치를 정확히 알리면 도착 소요 시간과 방문 가능 여부를 더 정확히 안내받을 수 있습니다.`,
       `${stationText} 등을 축으로 이동이 이어지는 ${nm}은(는) ${landmarkText} 일대를 중심으로 생활권이 묶입니다. 동네마다 동선이 다르니 방문 위치를 정확히 알리면 안내가 빨라집니다.`,
       `${nm}의 생활권은 ${landmarkText} 같은 시설과 ${stationText} 등 교통을 따라 형성됩니다. 같은 구라도 동에 따라 도착 시간이 달라질 수 있어 위치 전달이 중요합니다.`,
     ]))}</p>`;
   const secWho = `
-    <h2>${esc(nm)}에서 출장마사지·홈타이 이용이 많은 경우</h2>
+    <h2>${esc(branchHead(vb, "demand", nm))}</h2>
     <ul>${vsubset(vb, "who", [
       `매장 방문 없이 집·숙소에서 편하게 관리받고 싶은 경우`,
       `${nm} 안에서 퇴근 후·늦은 시간에 이용하고 싶은 경우`,
@@ -313,18 +313,23 @@ function guPage(gu) {
       `타 지역에서 ${nm}을(를) 찾아 숙소에서 방문 관리를 받고 싶은 경우`,
     ], 4).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
   const secCompare = `
-    <h2>${esc(nm)}에서 방문(홈타이)과 매장 이용 비교</h2>
+    <h2>${esc(branchHead(vb, "cmp2", nm))}</h2>
     <p>${esc(vpick(vb, "cmp", [
       `매장 이용이 시설과 부대 서비스를 함께 쓰는 방식이라면, 홈타이는 ${nm} 내 집·숙소로 관리사가 찾아오는 방문 방식입니다. 이동 부담이 적고 관리 후 바로 쉴 수 있는 대신, 관리 공간과 타월 등 준비물을 직접 챙겨야 하므로 예약 시 준비 사항을 확인하는 것이 좋습니다.`,
       `${nm}에서 매장 이용은 부대 시설을 함께 쓸 수 있고, 홈타이는 집·숙소로 받아 이동 없이 바로 쉴 수 있다는 점이 다릅니다. 목적과 시간대에 따라 맞는 방식을 고르면 됩니다.`,
       `홈타이는 ${nm} 인근 집·숙소로 관리사가 방문하는 형태라 이동 부담이 적습니다. 대신 관리 공간·타월 등 준비가 필요하므로 매장 이용과 비교해 예약 전 준비 사항을 확인해 두는 것이 좋습니다.`,
     ]))} 어떤 방식이 맞을지는 이용 목적과 시간, 동행 여부에 따라 달라집니다.</p>`;
   const secDongs = `
-    <h2>${esc(nm)} 행정동에서 찾기</h2>
+    <h2>${esc(vpick(vb, "hDongFind", [
+      `${nm} 행정동에서 찾기`,
+      `${nm} 행정동으로 좁혀 보기`,
+      `${nm} 동네별로 찾기`,
+      `${nm} 안에서 행정동 고르기`,
+    ]))}</h2>
     <p>아래에서 ${esc(nm)}의 행정동을 선택하면 해당 동네의 출장마사지·홈타이 이용 안내를 확인할 수 있습니다. (숫자 행정동은 대표 동명으로 통합해 안내합니다.)</p>
     <div class="link-cloud">${dongLinks}</div>`;
   const secPrograms = `
-    <h2>${esc(nm)}에서 비교해 볼 관리 방식</h2>
+    <h2>${esc(branchHead(vb, "compare", nm))}</h2>
     <p>${esc(vpick(vb, "prog", [
       `부드러운 오일 관리를 원한다면 스웨디시·아로마테라피, 스트레칭 위주라면 타이마사지, 집·숙소에서 편하게 받고 싶다면 홈타이, 가벼운 부분 관리는 발마사지를 비교해 보세요.`,
       `${nm} 인근에서는 오일 기반의 스웨디시·아로마, 근육을 늘려 푸는 타이마사지, 방문형 홈타이, 부분 관리인 발마사지를 목적에 맞게 고르면 됩니다.`,
@@ -333,14 +338,14 @@ function guPage(gu) {
     ${programChips(nm)}
     ${callout()}`;
   const secBooking = `
-    <h2>${esc(nm)} 출장마사지 예약 안내</h2>
+    <h2>${esc(branchHead(vb, "reserve", nm))}</h2>
     <p>${esc(vpick(vb, "book", [
       `${nm}에서 출장마사지나 홈타이를 예약할 때는 원하는 동네(행정동), 프로그램, 시간을 함께 전달하면 방문 가능 여부와 도착 예정 시간을 안내받을 수 있습니다. 처음 이용한다면 지역 확인 → 프로그램 선택 → 시간·비용 확인 → 전화예약 순서로 진행하면 됩니다.`,
       `${nm} 예약은 원하는 행정동과 프로그램·시간을 전화로 알리는 것에서 시작합니다. 방문 가능 여부와 도착 예정 시간, 총 비용을 함께 확인하면 진행이 매끄럽습니다.`,
       `${nm}에서 처음 예약한다면 ${dong1} 등 동네를 먼저 정하고, 프로그램과 시간을 고른 뒤 비용을 확인하는 순서가 편합니다.`,
     ]))} 표시 가격에 방문비나 심야 추가 요금이 포함되는지, 관리사 성별 지정이 가능한지도 미리 확인해 두면 좋습니다. 안내된 정보는 참고용이며 실제 이용 조건은 예약 과정에서 확정됩니다.</p>`;
   const secCheck = `
-    <h2>예약 전 체크리스트</h2>
+    <h2>${esc(branchHead(vb, "check", nm))}</h2>
     <ul>${vsubset(vb, "check", [
       `방문 희망 동네(행정동)와 방문 소요 시간`,
       `원하는 프로그램과 관리 시간`,
@@ -350,7 +355,7 @@ function guPage(gu) {
       `행정동별 방문 가능 권역 차이`,
     ], 5).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
   const secFaq = `
-    <h2>자주 묻는 질문</h2>
+    <h2>${esc(branchHead(vb, "faq", nm))}</h2>
     <div class="faq">
       ${faqs
         .map(
