@@ -10,10 +10,10 @@
 | 항목 | 내용 |
 |---|---|
 | 사이트명 | 겟마사지 (Health Land) |
-| 도메인 | https://massageintegration.com |
+| 도메인 | https://getmassages.com |
 | 메인 키워드 | 출장마사지 (보조: 홈타이) |
 | 전화예약 | 0508-202-4719 |
-| 이메일 | help@massageintegration.com |
+| 이메일 | help@getmassages.com |
 | 성격 | 정보 안내 플랫폼 (통신판매 비당사자) |
 | 총 페이지 | **3,898개** (전부 고유 타이틀·디스크립션) |
 
@@ -231,7 +231,7 @@ python tools/indexnow.py /경로/      # 변경 페이지만 즉시 통보
 
 ### 배포 체크리스트
 1. Cloudflare Pages 빌드(`npm run build`, 출력 `dist`)
-2. `massageintegration.com` 커스텀 도메인 연결 + DNS
+2. `getmassages.com` 커스텀 도메인 연결 + DNS
 3. 네이버 Search Advisor / 구글 Search Console에 sitemap·rss 제출
 4. `python tools/indexnow.py` 1회 실행(전체 통보)
 5. 이후 콘텐츠 변경 시 변경 경로만 `tools/indexnow.py`로 통보

@@ -4,10 +4,10 @@ export const site = {
   legalName: "겟마사지 출장마사지 안내",
   tagline: "전국 출장마사지·홈타이 정보 안내 플랫폼",
   // 검색 색인용 기본 도메인 (배포 시 환경변수 SITE_URL 로 교체 가능)
-  baseUrl: process.env.SITE_URL || "https://massageintegration.com",
+  baseUrl: process.env.SITE_URL || "https://getmassages.com",
   phone: "0508-202-4719",
   phoneHref: "tel:0508-202-4719",
-  email: "help@massageintegration.com",
+  email: "help@getmassages.com",
   locale: "ko_KR",
   // E-E-A-T: 책임 저자/검수자 정보
   author: {

@@ -35,15 +35,15 @@ npm run build:notify
 > 도메인은 `SITE_URL` 환경변수로 지정합니다(미지정 시 `data/site.mjs` 기본값).
 > 예: `SITE_URL=https://내도메인.com npm run notify`
 
-전제: 키 파일이 `https://massageintegration.com/b00508e375ed8ff4e993dc41ca0b8c4a.txt`
+전제: 키 파일이 `https://getmassages.com/b00508e375ed8ff4e993dc41ca0b8c4a.txt`
 로 게시되어 있어야 합니다(빌드 시 `dist/`에 자동 생성 → 배포하면 충족).
 
 ## 2. 네이버 — Search Advisor
 
 1. https://searchadvisor.naver.com → 사이트 등록
 2. 소유 확인: `<head>`에 이미 인증 메타가 들어 있음 (자동 확인됨)
-3. **요청 → 사이트맵 제출**: `https://massageintegration.com/sitemap.xml`
-4. **요청 → RSS 제출**: `https://massageintegration.com/rss.xml`
+3. **요청 → 사이트맵 제출**: `https://getmassages.com/sitemap.xml`
+4. **요청 → RSS 제출**: `https://getmassages.com/rss.xml`
 5. IndexNow는 위 `tools/indexnow.py`로 즉시 통보 (네이버 IndexNow 참여)
 
 ## 3. 구글 — Search Console (기본 경로)
@@ -94,7 +94,7 @@ GOOGLE_APPLICATION_CREDENTIALS=sa.json python tools/google_indexing.py /outcall/
 | 변수 | 기본값 | 설명 |
 |---|---|---|
 | `SITE_URL` | `data/site.mjs` 의 baseUrl | 배포 도메인(Node `npm run notify`·빌드 공용) |
-| `HOST` | `massageintegration.com` | 도메인(Python 도구) |
+| `HOST` | `getmassages.com` | 도메인(Python 도구) |
 | `SCHEME` | `https` | 프로토콜 |
 | `INDEXNOW_KEY` | `b00508e375ed8ff4e993dc41ca0b8c4a` | IndexNow 키 |
 | `GOOGLE_APPLICATION_CREDENTIALS` | — | 구글 서비스 계정 JSON 경로 |

@@ -12,4 +12,4 @@ Allow: /
 User-agent: Daumoa
 Allow: /
 
-Sitemap: https://massageintegration.com/sitemap.xml
+Sitemap: https://getmassages.com/sitemap.xml
