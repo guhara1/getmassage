@@ -1,0 +1,15 @@
+# robots.txt — 겟마사지
+User-agent: *
+Allow: /
+
+# 주요 검색엔진 명시 허용 (구글/빙/네이버/다음)
+User-agent: Googlebot
+Allow: /
+User-agent: bingbot
+Allow: /
+User-agent: Yeti
+Allow: /
+User-agent: Daumoa
+Allow: /
+
+Sitemap: https://massageintegration.com/sitemap.xml

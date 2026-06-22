@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" preserveAspectRatio="xMidYMid slice" role="img" aria-label="겟마사지 프리미엄 출장마사지·홈타이">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0c211c"/><stop offset="1" stop-color="#13332b"/></linearGradient>
+<radialGradient id="glow" cx="76%" cy="26%" r="60%"><stop offset="0" stop-color="#c9a96a" stop-opacity="0.55"/><stop offset="55%" stop-color="#c9a96a" stop-opacity="0.08"/><stop offset="100%" stop-color="#c9a96a" stop-opacity="0"/></radialGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e3cfa3"/><stop offset="1" stop-color="#b8965a"/></linearGradient>
+</defs>
+<rect width="1280" height="720" fill="url(#bg)"/>
+<rect width="1280" height="720" fill="url(#glow)"/>
+<g fill="none" stroke="url(#gold)">
+<path d="M-60,520 C260,420 420,650 760,500 1040,385 1170,565 1360,470" stroke-width="1.6" stroke-opacity="0.5"/>
+<path d="M-60,565 C290,475 470,690 800,545 1090,430 1210,610 1380,515" stroke-width="1" stroke-opacity="0.3"/>
+<path d="M-60,470 C240,380 400,600 740,450 1020,335 1150,520 1340,430" stroke-width="1" stroke-opacity="0.22"/>
+</g>
+<circle cx="930" cy="232" r="120" fill="#c9a96a" fill-opacity="0.05"/>
+<circle cx="930" cy="232" r="120" fill="none" stroke="url(#gold)" stroke-width="2" stroke-opacity="0.55"/>
+<circle cx="930" cy="232" r="150" fill="none" stroke="url(#gold)" stroke-width="1" stroke-opacity="0.2"/>
+<g fill="#e3cfa3"><circle cx="985" cy="150" r="3" fill-opacity="0.6"/><circle cx="852" cy="300" r="2.5" fill-opacity="0.45"/><circle cx="1015" cy="295" r="2" fill-opacity="0.5"/><circle cx="1080" cy="200" r="2" fill-opacity="0.4"/></g>
+<text x="640" y="392" text-anchor="middle" font-family="'Noto Serif KR', serif" font-size="66" font-weight="700" fill="#f4eee1" letter-spacing="3">HEALTH LAND</text>
+<text x="640" y="442" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="25" fill="#c9a96a" letter-spacing="7">PREMIUM 출장마사지 · 홈타이</text>
+<text x="640" y="492" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="21" fill="#9aa69c" letter-spacing="2">전화예약 0508-202-4719</text>
+</svg>
