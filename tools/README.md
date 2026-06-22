@@ -20,12 +20,20 @@
 구글은 IndexNow에 참여하지 않지만, **빙·네이버·얀덱스**는 즉시 반영됩니다.
 
 ```bash
-# 전체 URL 일괄 통보 (배포 후 1회)
+# 전체 URL 일괄 통보 (배포 후 1회)  ── Python 또는 Node 둘 중 아무거나
 python tools/indexnow.py
+npm run notify                  # = node scripts/notify-index.mjs (의존성 0, fetch 사용)
 
 # 글/페이지를 새로 올리거나 수정할 때 — 해당 URL만 즉시 통보
 python tools/indexnow.py /outcall/ /region/seoul/gangnam/
+npm run notify -- /outcall/ /region/seoul/gangnam/
+
+# 빌드 + 통보 한 번에
+npm run build:notify
 ```
+
+> 도메인은 `SITE_URL` 환경변수로 지정합니다(미지정 시 `data/site.mjs` 기본값).
+> 예: `SITE_URL=https://내도메인.com npm run notify`
 
 전제: 키 파일이 `https://massageintegration.com/b00508e375ed8ff4e993dc41ca0b8c4a.txt`
 로 게시되어 있어야 합니다(빌드 시 `dist/`에 자동 생성 → 배포하면 충족).
@@ -54,17 +62,39 @@ GOOGLE_APPLICATION_CREDENTIALS=sa.json python tools/google_indexing.py /outcall/
 공식 지원 대상은 JobPosting·BroadcastEvent이므로 일반 페이지는 보장되지 않습니다
 (`tools/google_indexing.py` 상단 주석 참고).
 
+## 4. 자동화 — GitHub Actions (`.github/workflows/indexnow.yml`)
+
+`data/`·`src/`·`scripts/` 변경이 `main` 에 푸시되면 **빌드 후 IndexNow 통보가 자동 실행**됩니다.
+수동 실행(`Actions → IndexNow 자동 통보 → Run workflow`) 시 특정 경로만 통보할 수도 있습니다.
+
+저장소 **Settings → Secrets and variables → Actions** 에서:
+
+| 종류 | 이름 | 값 | 필수 |
+|---|---|---|---|
+| Variable | `SITE_URL` | `https://내도메인.com` | 권장(미설정 시 기본 도메인) |
+| Variable | `INDEXNOW_KEY` | IndexNow 키 | 선택(기본 키 사용) |
+| Variable | `ENABLE_GOOGLE_INDEXING` | `true` | 구글 API 자동화 시에만 |
+| Secret | `GOOGLE_SERVICE_ACCOUNT_JSON` | 서비스 계정 JSON 전체 | 구글 API 자동화 시에만 |
+
+> ⚠️ **첫 배포 순서**: IndexNow는 키 파일(`/<KEY>.txt`)이 도메인에 살아 있어야 검증됩니다.
+> 따라서 **최초 1회는 배포가 끝난 뒤** `npm run notify`(또는 `python tools/indexnow.py`)를
+> 수동 실행하세요. 이후 푸시부터는 키 파일이 이미 게시돼 있어 자동 통보가 정상 동작합니다.
+
+> 참고: 구글·빙의 sitemap **ping**(`google.com/ping`, `bing.com/ping`)은 폐지되어
+> 자동화 대상이 아닙니다. 빙은 IndexNow가, 구글은 Search Console sitemap이 대체합니다.
+
 ## 권장 운영 흐름
 
 1. 콘텐츠 수정 → `npm run build` → 배포
-2. `python tools/indexnow.py <바뀐 경로들>` (빙·네이버 즉시)
+2. (자동) push 시 GitHub Actions가 IndexNow 통보 / (수동) `npm run notify -- <바뀐 경로들>`
 3. 큰 변경 시 구글 Search Console에서 sitemap 재처리 확인
 
 ## 환경변수
 
 | 변수 | 기본값 | 설명 |
 |---|---|---|
-| `HOST` | `massageintegration.com` | 도메인 |
+| `SITE_URL` | `data/site.mjs` 의 baseUrl | 배포 도메인(Node `npm run notify`·빌드 공용) |
+| `HOST` | `massageintegration.com` | 도메인(Python 도구) |
 | `SCHEME` | `https` | 프로토콜 |
 | `INDEXNOW_KEY` | `b00508e375ed8ff4e993dc41ca0b8c4a` | IndexNow 키 |
 | `GOOGLE_APPLICATION_CREDENTIALS` | — | 구글 서비스 계정 JSON 경로 |

@@ -1,0 +1,71 @@
+name: IndexNow 자동 통보 (빙·네이버·얀덱스)
+
+# 콘텐츠가 바뀌어 main 에 푸시되면 빌드 후 IndexNow 로 즉시 색인 통보한다.
+# (수동 실행 시 특정 경로만 통보 가능. 구글은 IndexNow 미참여 → 아래 google-indexing 잡 참고)
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/**"
+      - "src/**"
+      - "scripts/**"
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "통보할 경로(공백 구분, 비우면 sitemap 전체). 예: /outcall/ /region/seoul/"
+        required: false
+        default: ""
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    env:
+      # 실제 배포 도메인. 저장소 Settings → Variables 에 SITE_URL 설정 권장
+      # (미설정 시 data/site.mjs 의 기본 도메인 사용).
+      SITE_URL: ${{ vars.SITE_URL }}
+      INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 빌드(sitemap 생성)
+        run: node scripts/build.mjs
+      - name: IndexNow 통보
+        env:
+          URLS: ${{ github.event.inputs.urls }}
+        run: node scripts/notify-index.mjs $URLS
+
+  # (선택) 구글 Indexing API — 저장소 Variable ENABLE_GOOGLE_INDEXING=true 이고
+  # Secret GOOGLE_SERVICE_ACCOUNT_JSON 가 설정된 경우에만 실행.
+  # ⚠️ 공식 지원은 JobPosting·BroadcastEvent 한정, 일일 쿼터 기본 200건.
+  google-indexing:
+    needs: indexnow
+    runs-on: ubuntu-latest
+    if: ${{ vars.ENABLE_GOOGLE_INDEXING == 'true' }}
+    env:
+      SITE_URL: ${{ vars.SITE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 빌드(sitemap 생성)
+        run: node scripts/build.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: 의존성 설치
+        run: pip install --quiet google-auth requests
+      - name: 서비스 계정 키 작성
+        env:
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: printf '%s' "$GOOGLE_SA_JSON" > "$RUNNER_TEMP/sa.json"
+      - name: 구글 Indexing API 통보
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: python tools/google_indexing.py
