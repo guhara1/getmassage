@@ -9,6 +9,7 @@ import { extra as programExtra, regionNote } from "../data/programs-extra.mjs";
 import { regions, subways, placeBySlug, regionGroups } from "../data/regions.mjs";
 import { layout, esc, faqLd, articleLd, pricingTable, pricingLd, reviewsSection } from "../src/templates/layout.mjs";
 import { buildSeoulPages } from "./locations.mjs";
+import { vpick } from "./variants.mjs";
 import { buildRegionTree } from "./region-tree.mjs";
 import { incheon } from "../data/incheon.mjs";
 import { gyeonggi } from "../data/gyeonggi.mjs";
@@ -180,23 +181,49 @@ function programPage(p) {
   const ex = programExtra[p.slug] || {};
   const faqs = p.faqs.map((f) => ({ q: f.q, a: f.a }));
   if (ex.faq) faqs.push({ q: ex.faq.q, a: ex.faq.a });
+
+  // 프로그램마다 H2 제목 골격이 동일해지지 않도록 변형 엔진으로 제목을 분산.
+  // (목차 항목도 같은 값을 써서 H2와 일치시킴)
+  const vbP = "PG␟" + p.slug;
+  const L = p.label;
+  // 구조·설명형 제목은 라벨(프로그램명)을 포함해 프로그램 간 제목이 겹치지 않게 한다.
+  const hFlow = vpick(vbP, "hFlow", [
+    `${L} 이용 흐름과 관리 구성`, `${L} 이용 흐름과 구성`, `${L}는 이렇게 진행됩니다`, `${L} 관리 흐름 한눈에`,
+  ]);
+  const hWho = vpick(vbP, "hWho", [
+    `이런 분들이 ${L}를 많이 찾습니다`, `${L}를 많이 찾는 경우`, `이런 분께 ${L}를 추천합니다`, `어떤 분이 ${L}를 찾나요`,
+  ]);
+  const hOutcall = vpick(vbP, "hOutcall", [
+    `${L}를 출장마사지로 이용할 때 확인할 점`, `${L}를 출장으로 받을 때 확인할 점`, `방문(출장)으로 ${L} 받기`, `출장마사지로 ${L}를 받는다면`,
+  ]);
+  const hNotes = vpick(vbP, "hNotes", [
+    `${L} 주의사항과 더 알아둘 점`, `${L} 주의사항과 알아둘 점`, `${L} 미리 알아두면 좋은 점`, `${L} 이용 전 유의사항`,
+  ]);
+  // 관례적 제목(체크리스트·FAQ)은 라벨 포함 변형으로 분산
+  const hCheck = vpick(vbP, "hCheck", [
+    `${L} 예약 전 체크리스트`, `${L} 예약 전 체크 항목`, `${L} 예약 전 확인할 점`, `${L} 예약 전 확인사항`,
+  ]);
+  const hFaq = vpick(vbP, "hFaq", [
+    `${L} 자주 묻는 질문`, `${L} 자주 묻는 질문 모음`, `${L} 관련 자주 묻는 질문`,
+  ]);
+
   const careBlock = p.care
     ? `<h2 id="care">${esc(p.label)} 이용 시 처음 헷갈리는 부분</h2><p>${esc(
         p.care
       )}</p>`
     : "";
   const flowBlock = ex.flow
-    ? `<h2 id="flow">이용 흐름과 관리 구성</h2><p>${esc(ex.flow)}</p>`
+    ? `<h2 id="flow">${esc(hFlow)}</h2><p>${esc(ex.flow)}</p>`
     : "";
   const notesBlock = ex.notes
-    ? `<h2 id="notes">더 알아두면 좋은 점·주의사항</h2><p>${esc(ex.notes)}</p>`
+    ? `<h2 id="notes">${esc(hNotes)}</h2><p>${esc(ex.notes)}</p>`
     : "";
   // 홈타이 페이지 자체에서는 '홈타이와 비교'가 순환이 되므로 비교 대상을 매장 마사지로 둔다.
   const isHometaiPage = p.slug === "home-care";
-  const hometaiH2 = isHometaiPage ? "매장 마사지와 비교할 점" : "홈타이와 함께 비교할 점";
-  const hometaiToc = isHometaiPage
-    ? "매장 마사지와 비교할 부분"
-    : "홈타이 이용 시 비교할 부분";
+  const hometaiH2 = isHometaiPage
+    ? vpick(vbP, "hCmpHome", [`${L}와 매장 이용 비교`, `매장 마사지와 ${L} 비교`, `${L}, 매장 이용과 무엇이 다를까`, `${L}와 매장 마사지 비교`])
+    : vpick(vbP, "hCmpTai", [`${L}와 홈타이 비교`, `${L}와 방문형 홈타이 비교`, `홈타이로 ${L} 받을 때 비교할 점`, `${L}, 홈타이와 함께 보기`]);
+  const hometaiToc = hometaiH2;
 
   const body = `
   <nav class="breadcrumb container" aria-label="위치">
@@ -215,14 +242,14 @@ function programPage(p) {
         <strong>이 페이지 목차</strong>
         <ol>
           <li><a href="#overview">프로그램 개요</a></li>
-          <li><a href="#flow">이용 흐름과 관리 구성</a></li>
-          <li><a href="#who">이런 분들이 많이 찾는 경우</a></li>
-          <li><a href="#outcall">출장마사지와 함께 볼 때 확인할 점</a></li>
-          <li><a href="#hometai">${hometaiToc}</a></li>
-          <li><a href="#notes">더 알아두면 좋은 점·주의사항</a></li>
-          <li><a href="#checklist">예약 전 체크리스트</a></li>
+          <li><a href="#flow">${esc(hFlow)}</a></li>
+          <li><a href="#who">${esc(hWho)}</a></li>
+          <li><a href="#outcall">${esc(hOutcall)}</a></li>
+          <li><a href="#hometai">${esc(hometaiToc)}</a></li>
+          <li><a href="#notes">${esc(hNotes)}</a></li>
+          <li><a href="#checklist">${esc(hCheck)}</a></li>
           <li><a href="#region">지역별 관련 페이지</a></li>
-          <li><a href="#faq">자주 묻는 질문</a></li>
+          <li><a href="#faq">${esc(hFaq)}</a></li>
         </ol>
       </div>
 
@@ -231,18 +258,18 @@ function programPage(p) {
       ${careBlock}
       ${flowBlock}
 
-      <h2 id="who">이런 분들이 많이 찾는 경우</h2>
+      <h2 id="who">${esc(hWho)}</h2>
       <p>${esc(p.whoIntro)}</p>
       <ul>${p.whoList.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
 
-      <h2 id="outcall">출장마사지로 이용할 때 확인할 부분</h2>
+      <h2 id="outcall">${esc(hOutcall)}</h2>
       <p>${esc(p.outcall)}</p>
 
-      <h2 id="hometai">${hometaiH2}</h2>
+      <h2 id="hometai">${esc(hometaiH2)}</h2>
       <p>${esc(p.hometai)}</p>
       ${notesBlock}
 
-      <h2 id="checklist">예약 전 체크리스트</h2>
+      <h2 id="checklist">${esc(hCheck)}</h2>
       <ul>${p.checklist.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
       <div class="callout">표시된 정보와 가격은 변동될 수 있으므로, <strong>실제 이용 가능 여부와 비용은 예약 전 ${esc(
         site.phone
@@ -256,7 +283,7 @@ function programPage(p) {
       }
       ${regionLinks(p.label)}
 
-      <h2 id="faq">자주 묻는 질문</h2>
+      <h2 id="faq">${esc(hFaq)}</h2>
       <div class="faq">
         ${faqs
           .map(
