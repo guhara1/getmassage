@@ -6,7 +6,7 @@ import { site } from "../data/site.mjs";
 import { programBySlug } from "../data/programs.mjs";
 import { seoul } from "../data/seoul.mjs";
 import { slugify } from "./romanize.mjs";
-import { dongMeta, branchMeta } from "./region-tree.mjs";
+import { dongMeta, branchMeta, dongHead } from "./region-tree.mjs";
 import { vpick, vsubset, vshuffle } from "./variants.mjs";
 
 const MODIFIED = "2026-06-21";
@@ -23,7 +23,7 @@ const pick = (s, arr) => arr[s % arr.length];
 function authorBox() {
   return `
   <aside class="author-box">
-    <div class="avatar">HL</div>
+    <div class="avatar">겟마</div>
     <div class="meta">
       <strong>${esc(site.author.name)}</strong> · ${esc(site.author.role)}
       <p>${esc(site.author.bio)}</p>
@@ -117,7 +117,7 @@ function dongPage(gu, dongName, siblings) {
   ];
 
   const secOverview = `
-    <h2>${esc(dongName)} 지역 개요</h2>
+    <h2>${esc(dongHead(vb, "overview", dongName))}</h2>
     <p>${esc(openA)} 인근으로는 ${esc(stationText)} 등이 가까워 이동이 이어지며, ${esc(
     landmarkText
   )} 같은 시설이 생활 권역의 기준점이 됩니다.</p>
@@ -125,7 +125,7 @@ function dongPage(gu, dongName, siblings) {
     nearText
   )} 등 인접 동과 권역이 맞닿아 있어, 방문 위치를 정확히 알리면 안내가 한결 수월합니다.</p>`;
   const secWho = `
-    <h2>${esc(dongName)}에서 출장마사지·홈타이를 찾는 경우</h2>
+    <h2>${esc(dongHead(vb, "who", dongName))}</h2>
     <ul>${vsubset(vb, "who", [
       `${gu.name} 안에서 이동 없이 집·숙소에서 편하게 관리받고 싶은 경우`,
       `퇴근 후나 늦은 시간에 ${dongName} 인근에서 이용하고 싶은 경우`,
@@ -135,7 +135,7 @@ function dongPage(gu, dongName, siblings) {
       `타 지역에서 ${gu.name}을(를) 찾아 숙소에서 방문 관리를 받고 싶은 경우`,
     ], 4).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
   const secCheck = `
-    <h2>${esc(dongName)}에서 이용 시 확인할 점</h2>
+    <h2>${esc(dongHead(vb, "check", dongName))}</h2>
     <p>${esc(tip)} 표시된 운영 시간이나 가격은 변동될 수 있으므로, 방문 가능 여부·총 비용·추가 요금은 예약 단계에서 직접 확인하는 것이 좋습니다.</p>
     <ul>${vsubset(vb, "check", [
       `${dongName} 방문 가능 권역과 도착 소요 시간`,
@@ -147,11 +147,11 @@ function dongPage(gu, dongName, siblings) {
     ], 5).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>
     ${callout()}`;
   const secCompare = `
-    <h2>${esc(dongName)}에서 비교해 볼 관리 방식</h2>
+    <h2>${esc(dongHead(vb, "compare", dongName))}</h2>
     <p>${esc(comparePara)}</p>
     ${programChips(dongName)}`;
   const secFlow = `
-    <h2>${esc(dongName)} 출장마사지·홈타이 이용 흐름</h2>
+    <h2>${esc(dongHead(vb, "flow", dongName))}</h2>
     <p>${esc(flowPara)}</p>
     <p>${esc(vpick(vb, "flow2", [
       `${dongName}처럼 생활 권역이 형성된 동네는 매장 이용과 방문(홈타이)을 함께 비교하는 경우가 많습니다. 매장 이용이 시설·부대 서비스를 함께 쓰는 방식이라면, 홈타이는 내 공간으로 관리사가 찾아오는 방문 방식이라는 점이 가장 큰 차이입니다.`,
@@ -160,7 +160,7 @@ function dongPage(gu, dongName, siblings) {
     ]))} 어떤 방식이 맞을지는 이용 목적과 시간에 따라 달라지므로, 예약 단계에서 준비물·주차·출입 안내와 총 비용을 함께 확인하면 진행이 매끄럽습니다.</p>`;
 
   const secTips = `
-    <h2>${esc(dongName)} 코스·시간대 선택 안내</h2>
+    <h2>${esc(dongHead(vb, "tips", dongName))}</h2>
     <p>${esc(vpick(vb, "tipA", [
       `처음 ${dongName} 인근에서 이용한다면 60분 코스로 컨디션을 확인한 뒤 뭉침이 심하면 90·120분으로 늘리는 방식이 부담이 적습니다. 코스가 길수록 전신을 천천히 풀 수 있어 피로가 오래 누적된 경우에 적합합니다.`,
       `${dongName}에서는 가볍게 풀고 싶다면 60분, 전신을 고르게 받고 싶다면 90분, 집중 관리가 필요하면 120분 코스가 기준이 됩니다. 원하는 부위와 시간 여유에 맞춰 고르면 선택이 쉬워집니다.`,
@@ -190,7 +190,7 @@ function dongPage(gu, dongName, siblings) {
     ${secOverview}
     ${middle}
 
-    <h2>${esc(dongName)} 인근 지역</h2>
+    <h2>${esc(dongHead(vb, "near", dongName))}</h2>
     <p>같은 ${esc(gu.name)} 내 ${esc(
     nearText
   )} 등 인접 동과 함께 비교하면 방문 권역을 잡기 쉽습니다.</p>
@@ -205,7 +205,7 @@ function dongPage(gu, dongName, siblings) {
       <a href="/region/seoul/">서울 전체</a>
     </div>
 
-    <h2>자주 묻는 질문</h2>
+    <h2>${esc(dongHead(vb, "faq", dongName))}</h2>
     <div class="faq">
       ${faqs
         .map(

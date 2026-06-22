@@ -19,7 +19,7 @@ let _lineBySlug = {};
 function authorBox() {
   return `
   <aside class="author-box">
-    <div class="avatar">HL</div>
+    <div class="avatar">겟마</div>
     <div class="meta">
       <strong>${esc(site.author.name)}</strong> · ${esc(site.author.role)}
       <p>${esc(site.author.bio)}</p>
@@ -163,26 +163,56 @@ function stationPage(reg, sys) {
 
   // ── 중간 섹션을 페이지마다 다른 순서로 배치 ──
   const secOverview = `
-    <h2>${esc(station)} 역세권 개요</h2>
+    <h2>${esc(vpick(vb, "hOverview", [
+      `${station} 역세권 개요`,
+      `${station} 주변은 어떤 곳인가요`,
+      `${station} 일대 생활권 살펴보기`,
+      `한눈에 보는 ${station} 역세권`,
+    ]))}</h2>
     <p>${esc(openA)} ${esc(openB)}</p>
     <p>${esc(openC)} 표시된 운영 정보나 가격은 변동될 수 있어, 실제 방문 가능 여부와 비용은 예약 단계에서 확인하는 것이 정확합니다.</p>`;
   const secWho = `
-    <h2>${esc(station)} 인근에서 출장마사지·홈타이를 찾는 경우</h2>
+    <h2>${esc(vpick(vb, "hWho", [
+      `${station} 인근에서 출장마사지·홈타이를 찾는 경우`,
+      `이런 분이 ${station} 방문 관리를 찾습니다`,
+      `${station} 주변에서 방문 관리가 필요할 때`,
+      `${station}에서 출장마사지·홈타이를 고려한다면`,
+    ]))}</h2>
     <ul>${whoBullets.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
   const secCheck = `
-    <h2>${esc(station)} 이용 시 확인할 점</h2>
+    <h2>${esc(vpick(vb, "hCheck", [
+      `${station} 이용 시 확인할 점`,
+      `${station} 예약 전 짚어 둘 점`,
+      `${station}에서 미리 확인하면 좋은 것`,
+      `${station} 방문 전 체크 포인트`,
+    ]))}</h2>
     <p>${esc(checkPara)}</p>
     <ul>${checkBullets.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>
     ${callout()}`;
   const secCompare = `
-    <h2>${esc(station)} 인근에서 비교해 볼 관리 방식</h2>
+    <h2>${esc(vpick(vb, "hCompare", [
+      `${station} 인근에서 비교해 볼 관리 방식`,
+      `${station} 주변에서 고를 수 있는 관리 방식`,
+      `${station}에서 어떤 관리를 받을까`,
+      `${station} 인근 프로그램 선택 기준`,
+    ]))}</h2>
     <p>${esc(comparePara)}</p>
     ${programChips(station)}`;
   const secFlow = `
-    <h2>${esc(station)} 출장마사지·홈타이 이용 흐름</h2>
+    <h2>${esc(vpick(vb, "hFlow", [
+      `${station} 출장마사지·홈타이 이용 흐름`,
+      `${station} 예약부터 방문까지`,
+      `${station}에서 이용은 이렇게 진행됩니다`,
+      `${station} 방문 관리 진행 순서`,
+    ]))}</h2>
     <p>${esc(flowPara)}</p>`;
   const secTips = `
-    <h2>${esc(station)} 코스·시간대 선택 안내</h2>
+    <h2>${esc(vpick(vb, "hTips", [
+      `${station} 코스·시간대 선택 안내`,
+      `${station} 코스 길이와 시간대 고르기`,
+      `${station}에서 코스·시간 정하기`,
+      `${station} 추천 코스와 이용 시간`,
+    ]))}</h2>
     <p>${esc(vpick(vb, "tipA", [
       `처음 ${station} 인근에서 이용한다면 60분 코스로 컨디션을 확인한 뒤 뭉침이 심하면 90·120분으로 늘리는 방식이 부담이 적습니다. 코스가 길수록 전신을 천천히 풀 수 있어 피로가 오래 누적된 경우에 적합합니다.`,
       `${station}에서는 가볍게 풀고 싶다면 60분, 전신을 고르게 받고 싶다면 90분, 집중 관리가 필요하면 120분 코스가 기준이 됩니다. 원하는 부위와 시간 여유에 맞춰 고르면 선택이 쉬워집니다.`,
@@ -208,11 +238,20 @@ function stationPage(reg, sys) {
     ${secOverview}
     ${middle}
 
-    <h2>${esc(station)} 노선·인접역</h2>
+    <h2>${esc(vpick(vb, "hNeigh", [
+      `${station} 노선·인접역`,
+      `${station} 노선과 가까운 역`,
+      `${station} 인접역·환승 노선`,
+      `${station}과(와) 이어지는 역`,
+    ]))}</h2>
     <p>${esc(station)}이(가) 속한 ${esc(lineText)}과(와) ${esc(neighText)} 등 인접역을 함께 확인하면 이동 동선에 맞는 안내를 받기 좋습니다.</p>
     <div class="link-cloud">${lineLinks}${neighLinks}</div>
 
-    <h2>자주 묻는 질문</h2>
+    <h2>${esc(vpick(vb, "hFaq", [
+      `자주 묻는 질문`,
+      `${station} 자주 묻는 질문`,
+      `예약 전 자주 묻는 질문`,
+    ]))}</h2>
     <div class="faq">
       ${faqs.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n      ")}
     </div>
@@ -285,16 +324,31 @@ function linePage(line, sys) {
   ];
 
   const secStations = `
-    <h2>${esc(line.name)} 역에서 찾기</h2>
+    <h2>${esc(vpick(vb, "hStations", [
+      `${line.name} 역에서 찾기`,
+      `${line.name} 어느 역에서 이용할까`,
+      `${line.name} 역 목록으로 찾기`,
+      `${line.name} 정차역에서 선택하기`,
+    ]))}</h2>
     <p>아래에서 역을 선택하면 해당 역 인근의 출장마사지·홈타이 이용 안내를 확인할 수 있습니다.</p>
     <div class="link-cloud">${stationLinks}</div>`;
   const secCompare = `
-    <h2>${esc(line.name)} 인근에서 비교해 볼 관리 방식</h2>
+    <h2>${esc(vpick(vb, "hCompare", [
+      `${line.name} 인근에서 비교해 볼 관리 방식`,
+      `${line.name} 주변에서 고를 수 있는 관리 방식`,
+      `${line.name}에서 어떤 관리를 받을까`,
+      `${line.name} 인근 프로그램 선택 기준`,
+    ]))}</h2>
     <p>${esc(compare)}</p>
     ${programChips(line.name)}
     ${callout()}`;
   const secWho = `
-    <h2>${esc(line.name)} 인근에서 출장마사지·홈타이를 찾는 경우</h2>
+    <h2>${esc(vpick(vb, "hWho", [
+      `${line.name} 인근에서 출장마사지·홈타이를 찾는 경우`,
+      `이런 분이 ${line.name} 인근 방문 관리를 찾습니다`,
+      `${line.name} 주변에서 방문 관리가 필요할 때`,
+      `${line.name}에서 출장마사지·홈타이를 고려한다면`,
+    ]))}</h2>
     <ul>${vsubset(vb, "who", [
       `${line.name} 역세권에서 이동 없이 집·숙소에서 편하게 관리받고 싶은 경우`,
       `퇴근 후나 늦은 시간에 노선 인근에서 이용하고 싶은 경우`,
@@ -303,10 +357,20 @@ function linePage(line, sys) {
       `${first}·${last} 등 노선 양 끝 구간에서 숙소 방문 관리를 받고 싶은 경우`,
     ], 4).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
   const secUse = `
-    <h2>${esc(line.name)} 이용 안내</h2>
+    <h2>${esc(vpick(vb, "hUse", [
+      `${line.name} 이용 안내`,
+      `${line.name} 예약·이용 방법`,
+      `${line.name}에서 이용은 이렇게`,
+      `${line.name} 방문 관리 진행 안내`,
+    ]))}</h2>
     <p>${esc(useGuide)}</p>`;
   const secCheck = `
-    <h2>예약 전 체크리스트</h2>
+    <h2>${esc(vpick(vb, "hCheck", [
+      `예약 전 체크리스트`,
+      `${line.name} 예약 전 확인할 점`,
+      `예약 전 짚어 둘 점`,
+      `${line.name} 방문 전 체크 포인트`,
+    ]))}</h2>
     <ul>${vsubset(vb, "check", [
       `방문 희망 역과 인근 방문 소요 시간`,
       `원하는 프로그램과 관리 시간`,
@@ -316,7 +380,12 @@ function linePage(line, sys) {
       `${line.name} 환승·이동 동선에 따른 방문 시간대`,
     ], 5).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
   const secCmp2 = `
-    <h2>${esc(line.name)} 방문(홈타이)과 매장 이용 비교</h2>
+    <h2>${esc(vpick(vb, "hCmp2", [
+      `${line.name} 방문(홈타이)과 매장 이용 비교`,
+      `${line.name} 홈타이와 매장, 무엇이 다를까`,
+      `${line.name} 방문형과 매장형 차이`,
+      `${line.name}에서 홈타이·매장 중 고르기`,
+    ]))}</h2>
     <p>${esc(cmp2)} 어떤 방식이 맞을지는 이용 목적과 시간에 따라 달라집니다.</p>`;
 
   const middle = vshuffle(vb, "order", [secCompare, secWho, secUse, secCheck, secCmp2]).join("\n");
@@ -332,14 +401,23 @@ function linePage(line, sys) {
     ${secStations}
     ${middle}
 
-    <h2>지역·프로그램과 함께 보기</h2>
+    <h2>${esc(vpick(vb, "hTogether", [
+      `지역·프로그램과 함께 보기`,
+      `${line.name}과(와) 지역·프로그램 함께 보기`,
+      `인근 지역·관리 프로그램 둘러보기`,
+      `지역과 프로그램으로 넓혀 보기`,
+    ]))}</h2>
     <p>노선 인근 지역과 관리 프로그램을 함께 확인하면 선택 기준을 잡기 쉽습니다.</p>
     <div class="link-cloud">
       <a href="/region/seoul/">서울</a><a href="/region/gyeonggi/">경기</a><a href="/region/incheon/">인천</a><a href="/region/busan/">부산</a>
       <a href="/program/swedish/">스웨디시</a><a href="/program/aroma-therapy/">아로마테라피</a><a href="/program/home-care/">홈타이</a><a href="/guide/">예약 가이드</a>
     </div>
 
-    <h2>자주 묻는 질문</h2>
+    <h2>${esc(vpick(vb, "hFaq", [
+      `자주 묻는 질문`,
+      `${line.name} 자주 묻는 질문`,
+      `예약 전 자주 묻는 질문`,
+    ]))}</h2>
     <div class="faq">
       ${faqs.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n      ")}
     </div>
